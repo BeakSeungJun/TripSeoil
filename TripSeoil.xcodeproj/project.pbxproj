@@ -1,0 +1,651 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5B8036832E79140000E215FD /* KakaoSDKFriendResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5B8036822E79140000E215FD /* KakaoSDKFriendResources.bundle */; };
+		5B8036862E7914D200E215FD /* RxKakaoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 5B8036852E7914D200E215FD /* RxKakaoSDK */; };
+		5B8036882E7914D200E215FD /* RxKakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 5B8036872E7914D200E215FD /* RxKakaoSDKAuth */; };
+		5B80368A2E7914D200E215FD /* RxKakaoSDKCert in Frameworks */ = {isa = PBXBuildFile; productRef = 5B8036892E7914D200E215FD /* RxKakaoSDKCert */; };
+		5B80368C2E7914D200E215FD /* RxKakaoSDKCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 5B80368B2E7914D200E215FD /* RxKakaoSDKCommon */; };
+		5B80368E2E7914D200E215FD /* RxKakaoSDKFriend in Frameworks */ = {isa = PBXBuildFile; productRef = 5B80368D2E7914D200E215FD /* RxKakaoSDKFriend */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		5B80364C2E7911B200E215FD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5B8036362E7911B100E215FD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5B80363D2E7911B100E215FD;
+			remoteInfo = TripSeoil;
+		};
+		5B8036562E7911B200E215FD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5B8036362E7911B100E215FD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5B80363D2E7911B100E215FD;
+			remoteInfo = TripSeoil;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		5B80363E2E7911B100E215FD /* TripSeoil.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TripSeoil.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5B80364B2E7911B200E215FD /* TripSeoilTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TripSeoilTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5B8036552E7911B200E215FD /* TripSeoilUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TripSeoilUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5B8036822E79140000E215FD /* KakaoSDKFriendResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = KakaoSDKFriendResources.bundle; path = "../../Library/Developer/Xcode/DerivedData/TripSeoil-apmdxyhaqbqutwazruiukwabepki/SourcePackages/checkouts/kakao-ios-sdk/Sources/KakaoSDKFriendCore/KakaoSDKFriendResources.bundle"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		5B8036812E79138100E215FD /* Exceptions for "TripSeoil" folder in "TripSeoil" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 5B80363D2E7911B100E215FD /* TripSeoil */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		5B8036402E7911B100E215FD /* TripSeoil */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				5B8036812E79138100E215FD /* Exceptions for "TripSeoil" folder in "TripSeoil" target */,
+			);
+			path = TripSeoil;
+			sourceTree = "<group>";
+		};
+		5B80364E2E7911B200E215FD /* TripSeoilTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = TripSeoilTests;
+			sourceTree = "<group>";
+		};
+		5B8036582E7911B200E215FD /* TripSeoilUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = TripSeoilUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5B80363B2E7911B100E215FD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5B80368C2E7914D200E215FD /* RxKakaoSDKCommon in Frameworks */,
+				5B8036862E7914D200E215FD /* RxKakaoSDK in Frameworks */,
+				5B80368A2E7914D200E215FD /* RxKakaoSDKCert in Frameworks */,
+				5B8036882E7914D200E215FD /* RxKakaoSDKAuth in Frameworks */,
+				5B80368E2E7914D200E215FD /* RxKakaoSDKFriend in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5B8036482E7911B200E215FD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5B8036522E7911B200E215FD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5B8036352E7911B100E215FD = {
+			isa = PBXGroup;
+			children = (
+				5B8036822E79140000E215FD /* KakaoSDKFriendResources.bundle */,
+				5B8036402E7911B100E215FD /* TripSeoil */,
+				5B80364E2E7911B200E215FD /* TripSeoilTests */,
+				5B8036582E7911B200E215FD /* TripSeoilUITests */,
+				5B80363F2E7911B100E215FD /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5B80363F2E7911B100E215FD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5B80363E2E7911B100E215FD /* TripSeoil.app */,
+				5B80364B2E7911B200E215FD /* TripSeoilTests.xctest */,
+				5B8036552E7911B200E215FD /* TripSeoilUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5B80363D2E7911B100E215FD /* TripSeoil */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5B80365F2E7911B200E215FD /* Build configuration list for PBXNativeTarget "TripSeoil" */;
+			buildPhases = (
+				5B80363A2E7911B100E215FD /* Sources */,
+				5B80363B2E7911B100E215FD /* Frameworks */,
+				5B80363C2E7911B100E215FD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				5B8036402E7911B100E215FD /* TripSeoil */,
+			);
+			name = TripSeoil;
+			packageProductDependencies = (
+				5B8036852E7914D200E215FD /* RxKakaoSDK */,
+				5B8036872E7914D200E215FD /* RxKakaoSDKAuth */,
+				5B8036892E7914D200E215FD /* RxKakaoSDKCert */,
+				5B80368B2E7914D200E215FD /* RxKakaoSDKCommon */,
+				5B80368D2E7914D200E215FD /* RxKakaoSDKFriend */,
+			);
+			productName = TripSeoil;
+			productReference = 5B80363E2E7911B100E215FD /* TripSeoil.app */;
+			productType = "com.apple.product-type.application";
+		};
+		5B80364A2E7911B200E215FD /* TripSeoilTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5B8036622E7911B200E215FD /* Build configuration list for PBXNativeTarget "TripSeoilTests" */;
+			buildPhases = (
+				5B8036472E7911B200E215FD /* Sources */,
+				5B8036482E7911B200E215FD /* Frameworks */,
+				5B8036492E7911B200E215FD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5B80364D2E7911B200E215FD /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				5B80364E2E7911B200E215FD /* TripSeoilTests */,
+			);
+			name = TripSeoilTests;
+			packageProductDependencies = (
+			);
+			productName = TripSeoilTests;
+			productReference = 5B80364B2E7911B200E215FD /* TripSeoilTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		5B8036542E7911B200E215FD /* TripSeoilUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5B8036652E7911B200E215FD /* Build configuration list for PBXNativeTarget "TripSeoilUITests" */;
+			buildPhases = (
+				5B8036512E7911B200E215FD /* Sources */,
+				5B8036522E7911B200E215FD /* Frameworks */,
+				5B8036532E7911B200E215FD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5B8036572E7911B200E215FD /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				5B8036582E7911B200E215FD /* TripSeoilUITests */,
+			);
+			name = TripSeoilUITests;
+			packageProductDependencies = (
+			);
+			productName = TripSeoilUITests;
+			productReference = 5B8036552E7911B200E215FD /* TripSeoilUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5B8036362E7911B100E215FD /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					5B80363D2E7911B100E215FD = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					5B80364A2E7911B200E215FD = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 5B80363D2E7911B100E215FD;
+					};
+					5B8036542E7911B200E215FD = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 5B80363D2E7911B100E215FD;
+					};
+				};
+			};
+			buildConfigurationList = 5B8036392E7911B100E215FD /* Build configuration list for PBXProject "TripSeoil" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5B8036352E7911B100E215FD;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				5B8036692E79130600E215FD /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
+				5B8036842E7914D200E215FD /* XCRemoteSwiftPackageReference "kakao-ios-sdk-rx" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 5B80363F2E7911B100E215FD /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5B80363D2E7911B100E215FD /* TripSeoil */,
+				5B80364A2E7911B200E215FD /* TripSeoilTests */,
+				5B8036542E7911B200E215FD /* TripSeoilUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5B80363C2E7911B100E215FD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5B8036832E79140000E215FD /* KakaoSDKFriendResources.bundle in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5B8036492E7911B200E215FD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5B8036532E7911B200E215FD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5B80363A2E7911B100E215FD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5B8036472E7911B200E215FD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5B8036512E7911B200E215FD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5B80364D2E7911B200E215FD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5B80363D2E7911B100E215FD /* TripSeoil */;
+			targetProxy = 5B80364C2E7911B200E215FD /* PBXContainerItemProxy */;
+		};
+		5B8036572E7911B200E215FD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5B80363D2E7911B100E215FD /* TripSeoil */;
+			targetProxy = 5B8036562E7911B200E215FD /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		5B80365D2E7911B200E215FD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		5B80365E2E7911B200E215FD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		5B8036602E7911B200E215FD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TripSeoil/TripSeoil.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZX5KBUB53G;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TripSeoil/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = seoil.TripSeoil;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5B8036612E7911B200E215FD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TripSeoil/TripSeoil.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZX5KBUB53G;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TripSeoil/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = seoil.TripSeoil;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		5B8036632E7911B200E215FD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = seoil.TripSeoilTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TripSeoil.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TripSeoil";
+			};
+			name = Debug;
+		};
+		5B8036642E7911B200E215FD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = seoil.TripSeoilTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TripSeoil.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TripSeoil";
+			};
+			name = Release;
+		};
+		5B8036662E7911B200E215FD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = seoil.TripSeoilUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = TripSeoil;
+			};
+			name = Debug;
+		};
+		5B8036672E7911B200E215FD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = seoil.TripSeoilUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = TripSeoil;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5B8036392E7911B100E215FD /* Build configuration list for PBXProject "TripSeoil" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5B80365D2E7911B200E215FD /* Debug */,
+				5B80365E2E7911B200E215FD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5B80365F2E7911B200E215FD /* Build configuration list for PBXNativeTarget "TripSeoil" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5B8036602E7911B200E215FD /* Debug */,
+				5B8036612E7911B200E215FD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5B8036622E7911B200E215FD /* Build configuration list for PBXNativeTarget "TripSeoilTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5B8036632E7911B200E215FD /* Debug */,
+				5B8036642E7911B200E215FD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5B8036652E7911B200E215FD /* Build configuration list for PBXNativeTarget "TripSeoilUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5B8036662E7911B200E215FD /* Debug */,
+				5B8036672E7911B200E215FD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		5B8036692E79130600E215FD /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kakao/kakao-ios-sdk";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		5B8036842E7914D200E215FD /* XCRemoteSwiftPackageReference "kakao-ios-sdk-rx" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kakao/kakao-ios-sdk-rx";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5B8036852E7914D200E215FD /* RxKakaoSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5B8036842E7914D200E215FD /* XCRemoteSwiftPackageReference "kakao-ios-sdk-rx" */;
+			productName = RxKakaoSDK;
+		};
+		5B8036872E7914D200E215FD /* RxKakaoSDKAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5B8036842E7914D200E215FD /* XCRemoteSwiftPackageReference "kakao-ios-sdk-rx" */;
+			productName = RxKakaoSDKAuth;
+		};
+		5B8036892E7914D200E215FD /* RxKakaoSDKCert */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5B8036842E7914D200E215FD /* XCRemoteSwiftPackageReference "kakao-ios-sdk-rx" */;
+			productName = RxKakaoSDKCert;
+		};
+		5B80368B2E7914D200E215FD /* RxKakaoSDKCommon */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5B8036842E7914D200E215FD /* XCRemoteSwiftPackageReference "kakao-ios-sdk-rx" */;
+			productName = RxKakaoSDKCommon;
+		};
+		5B80368D2E7914D200E215FD /* RxKakaoSDKFriend */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5B8036842E7914D200E215FD /* XCRemoteSwiftPackageReference "kakao-ios-sdk-rx" */;
+			productName = RxKakaoSDKFriend;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 5B8036362E7911B100E215FD /* Project object */;
+}
