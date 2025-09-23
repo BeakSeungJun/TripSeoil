@@ -149,6 +149,7 @@ class LoginViewModel: ObservableObject {
     }
     
     // MARK: - Private Helper Functions
+    // 로그인 과정의 결과를 처리하는 함수
     private func handleLoginResponse(error: Error?) {
         if let error = error {
             handleLoginFailure(error: error)
@@ -159,6 +160,7 @@ class LoginViewModel: ObservableObject {
     }
     
     private func fetchKakaoUserInfo() {
+        //사용자의 정보를 가져오는 함수
         UserApi.shared.me() { [weak self] (user, error) in
             if let error = error {
                 self?.handleLoginFailure(error: error)
@@ -170,8 +172,7 @@ class LoginViewModel: ObservableObject {
     }
     
     private func handleLoginSuccess(username: String) {
-        // UI 상태 변경을 메인 스레드에서 확실하게 실행하도록 감싸줍니다.
-        // @MainActor를 사용했으므로 DispatchQueue.main.async는 선택사항이지만, 명시적으로 사용해도 무방합니다.
+        //로그인 성공 시 사용자 이름을 저장하고 로그인 값을 false에서 true로 변경
         DispatchQueue.main.async {
             self.username = username
             self.isLoggedIn = true
@@ -179,7 +180,7 @@ class LoginViewModel: ObservableObject {
     }
     
     private func handleLoginFailure(error: Error) {
-        // 에러 처리도 메인 스레드에서 실행하는 것이 안전합니다.
+        // 로그인을 실패했을 때
         DispatchQueue.main.async {
             print("로그인 실패: \(error.localizedDescription)")
             self.alertMessage = "로그인에 실패했습니다. 다시 시도해주세요."
@@ -209,7 +210,7 @@ struct LoggedInView: View {
 }
 
 
-// MARK: - 6. SwiftUI 미리보기
+// MARK: - 5. SwiftUI 미리보기
 #Preview {
     ContentView()
 }
