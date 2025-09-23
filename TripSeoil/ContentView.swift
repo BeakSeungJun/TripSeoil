@@ -1,9 +1,4 @@
 import SwiftUI
-import AuthenticationServices
-import KakaoSDKCommon
-import KakaoSDKAuth
-import KakaoSDKUser
-import Combine // ViewModel을 위해 필요합니다.
 
 // MARK: - 1. 앱 진입점 및 메인 뷰 (ContentView)
 // 앱의 첫 화면이 될 메인 뷰입니다.
@@ -46,6 +41,7 @@ struct ContentView: View {
     }
 }
 
+<<<<<<< Updated upstream
 // MARK: - 2. 로그인 UI를 담당하는 View
 struct LoginView: View {
     // @StateObject: View가 살아있는 동안 ViewModel 인스턴스를 메모리에 유지합니다.
@@ -212,5 +208,8 @@ struct LoggedInView: View {
 
 // MARK: - 5. SwiftUI 미리보기
 #Preview {
+=======
+#Preview{
+>>>>>>> Stashed changes
     ContentView()
 }
