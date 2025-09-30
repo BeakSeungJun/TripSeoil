@@ -52,7 +52,3 @@ struct WelcomeView: View {
         }
     }
 }
-
-#Preview{
-    ContentView()
-}
