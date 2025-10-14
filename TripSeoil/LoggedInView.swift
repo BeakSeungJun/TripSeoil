@@ -15,11 +15,17 @@ struct LoggedInView: View {
         // ZStack 대신 TabView를 사용하여 화면 상단에 환영 메시지를 띄웁니다.
         // NavigationView를 사용하지 않으므로, 환영 메시지는 탭 내용 위에 고정됩니다.
         VStack(spacing: 0) {
-        
+            // 1. 환영 메시지 영역
+            Text("\(username)님, 로그인에 성공했습니다.")
+                .font(.headline)
+                .padding(.top, 50)
+                .padding(.bottom, 20)
+            
+            // 2. 탭 뷰 (본문 콘텐츠)
             TabView(selection: $selectedTab) {
                 // MARK: - 날씨 탭
-                // WeatherView()
-                Text("날씨 탭 준비 중...")
+                // WeatherView() 활성화
+                WeatherView()
                     .tabItem {
                         Image(systemName: "sun.max.fill")
                         Text("날씨")
@@ -68,16 +74,6 @@ struct LoggedInView: View {
     }
 }
 
-// MARK: - 2. 개별 기능 상세 화면 (Placeholder)
-// 이 뷰들은 각자의 .swift 파일로 분리되어 있습니다.
-// NOTE: 임시 뷰들을 주석 처리하거나 제거했습니다. 환율 뷰는 별도 파일로 존재한다고 가정합니다.
-
-/*
-struct WeatherView: View { @StateObject var viewModel = WeatherViewModel(); var body: Text("날씨 정보를 보여줄 화면입니다.") }
-struct RecommendedTripView: View { var body: Text("추천 여행지를 보여줄 화면입니다.") }
-struct TravelLedgerView: View { var body: Text("여행 가계부를 보여줄 화면입니다.") }
-struct MyTravelLogView: View { var body: Text("내 여행 기록을 보여줄 화면입니다.") }
-*/
 
 
 // MARK: - 미리보기
