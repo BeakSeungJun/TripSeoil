@@ -7,12 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5B1D35172EB054DD00E48119 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 5B1D35162EB054DD00E48119 /* FirebaseCrashlytics */; };
+		5B1D351D2EB054EF00E48119 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 5B1D351C2EB054EF00E48119 /* FirebaseCore */; };
+		5B1D351F2EB0550800E48119 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 5B1D351E2EB0550800E48119 /* FirebaseFirestore */; };
+		5B1D35212EB0551800E48119 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 5B1D35202EB0551800E48119 /* FirebaseAuth */; };
 		5B8036832E79140000E215FD /* KakaoSDKFriendResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5B8036822E79140000E215FD /* KakaoSDKFriendResources.bundle */; };
 		5B8036862E7914D200E215FD /* RxKakaoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 5B8036852E7914D200E215FD /* RxKakaoSDK */; };
 		5B8036882E7914D200E215FD /* RxKakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 5B8036872E7914D200E215FD /* RxKakaoSDKAuth */; };
 		5B80368A2E7914D200E215FD /* RxKakaoSDKCert in Frameworks */ = {isa = PBXBuildFile; productRef = 5B8036892E7914D200E215FD /* RxKakaoSDKCert */; };
 		5B80368C2E7914D200E215FD /* RxKakaoSDKCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 5B80368B2E7914D200E215FD /* RxKakaoSDKCommon */; };
-		5B80368E2E7914D200E215FD /* RxKakaoSDKFriend in Frameworks */ = {isa = PBXBuildFile; productRef = 5B80368D2E7914D200E215FD /* RxKakaoSDKFriend */; };
+		5BAA3EB42EB101B300CE048E /* RxKakaoSDKFriend in Frameworks */ = {isa = PBXBuildFile; productRef = 5B80368D2E7914D200E215FD /* RxKakaoSDKFriend */; };
+		5BAA3ED12EB1029000CE048E /* GoogleMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 5BAA3ED02EB1029000CE048E /* GoogleMaps */; };
+		5BAA3ED42EB1041600CE048E /* GooglePlaces in Frameworks */ = {isa = PBXBuildFile; productRef = 5BAA3ED32EB1041600CE048E /* GooglePlaces */; };
+		5BAA3ED62EB1041600CE048E /* GooglePlacesSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 5BAA3ED52EB1041600CE048E /* GooglePlacesSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,11 +82,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5BAA3EB42EB101B300CE048E /* RxKakaoSDKFriend in Frameworks */,
 				5B80368C2E7914D200E215FD /* RxKakaoSDKCommon in Frameworks */,
+				5BAA3ED12EB1029000CE048E /* GoogleMaps in Frameworks */,
 				5B8036862E7914D200E215FD /* RxKakaoSDK in Frameworks */,
 				5B80368A2E7914D200E215FD /* RxKakaoSDKCert in Frameworks */,
+				5B1D35172EB054DD00E48119 /* FirebaseCrashlytics in Frameworks */,
+				5B1D351D2EB054EF00E48119 /* FirebaseCore in Frameworks */,
 				5B8036882E7914D200E215FD /* RxKakaoSDKAuth in Frameworks */,
-				5B80368E2E7914D200E215FD /* RxKakaoSDKFriend in Frameworks */,
+				5B1D351F2EB0550800E48119 /* FirebaseFirestore in Frameworks */,
+				5B1D35212EB0551800E48119 /* FirebaseAuth in Frameworks */,
+				5BAA3ED42EB1041600CE048E /* GooglePlaces in Frameworks */,
+				5BAA3ED62EB1041600CE048E /* GooglePlacesSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -100,6 +114,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5B1D35132EB054DD00E48119 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		5B8036352E7911B100E215FD = {
 			isa = PBXGroup;
 			children = (
@@ -107,6 +128,7 @@
 				5B8036402E7911B100E215FD /* TripSeoil */,
 				5B80364E2E7911B200E215FD /* TripSeoilTests */,
 				5B8036582E7911B200E215FD /* TripSeoilUITests */,
+				5B1D35132EB054DD00E48119 /* Frameworks */,
 				5B80363F2E7911B100E215FD /* Products */,
 			);
 			sourceTree = "<group>";
@@ -146,6 +168,13 @@
 				5B8036892E7914D200E215FD /* RxKakaoSDKCert */,
 				5B80368B2E7914D200E215FD /* RxKakaoSDKCommon */,
 				5B80368D2E7914D200E215FD /* RxKakaoSDKFriend */,
+				5B1D35162EB054DD00E48119 /* FirebaseCrashlytics */,
+				5B1D351C2EB054EF00E48119 /* FirebaseCore */,
+				5B1D351E2EB0550800E48119 /* FirebaseFirestore */,
+				5B1D35202EB0551800E48119 /* FirebaseAuth */,
+				5BAA3ED02EB1029000CE048E /* GoogleMaps */,
+				5BAA3ED32EB1041600CE048E /* GooglePlaces */,
+				5BAA3ED52EB1041600CE048E /* GooglePlacesSwift */,
 			);
 			productName = TripSeoil;
 			productReference = 5B80363E2E7911B100E215FD /* TripSeoil.app */;
@@ -232,6 +261,9 @@
 			packageReferences = (
 				5B8036692E79130600E215FD /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
 				5B8036842E7914D200E215FD /* XCRemoteSwiftPackageReference "kakao-ios-sdk-rx" */,
+				5B1D35122EB0538600E48119 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				5B1D35292EB1000C00E48119 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */,
+				5BAA3ED22EB1041600CE048E /* XCRemoteSwiftPackageReference "ios-places-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5B80363F2E7911B100E215FD /* Products */;
@@ -443,6 +475,7 @@
 				INFOPLIST_FILE = TripSeoil/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "";
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "사용자 위치";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -475,6 +508,7 @@
 				INFOPLIST_FILE = TripSeoil/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "";
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "사용자 위치";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -603,6 +637,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		5B1D35122EB0538600E48119 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.4.0;
+			};
+		};
+		5B1D35292EB1000C00E48119 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googlemaps/ios-maps-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.4.0;
+			};
+		};
 		5B8036692E79130600E215FD /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kakao/kakao-ios-sdk";
@@ -619,9 +669,37 @@
 				kind = branch;
 			};
 		};
+		5BAA3ED22EB1041600CE048E /* XCRemoteSwiftPackageReference "ios-places-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googlemaps/ios-places-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.4.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		5B1D35162EB054DD00E48119 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5B1D35122EB0538600E48119 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		5B1D351C2EB054EF00E48119 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5B1D35122EB0538600E48119 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		5B1D351E2EB0550800E48119 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5B1D35122EB0538600E48119 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		5B1D35202EB0551800E48119 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5B1D35122EB0538600E48119 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
 		5B8036852E7914D200E215FD /* RxKakaoSDK */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 5B8036842E7914D200E215FD /* XCRemoteSwiftPackageReference "kakao-ios-sdk-rx" */;
@@ -646,6 +724,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5B8036842E7914D200E215FD /* XCRemoteSwiftPackageReference "kakao-ios-sdk-rx" */;
 			productName = RxKakaoSDKFriend;
+		};
+		5BAA3ED02EB1029000CE048E /* GoogleMaps */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5B1D35292EB1000C00E48119 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */;
+			productName = GoogleMaps;
+		};
+		5BAA3ED32EB1041600CE048E /* GooglePlaces */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5BAA3ED22EB1041600CE048E /* XCRemoteSwiftPackageReference "ios-places-sdk" */;
+			productName = GooglePlaces;
+		};
+		5BAA3ED52EB1041600CE048E /* GooglePlacesSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5BAA3ED22EB1041600CE048E /* XCRemoteSwiftPackageReference "ios-places-sdk" */;
+			productName = GooglePlacesSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

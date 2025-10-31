@@ -1,6 +1,9 @@
 import SwiftUI
 import KakaoSDKUser
 import AuthenticationServices
+import GoogleMaps
+import GooglePlaces
+
 // 다른 뷰 파일들을 사용하기 위해 import 합니다.
 // (실제 프로젝트에서는 별도로 파일이 존재해야 합니다.)
 
@@ -14,12 +17,9 @@ struct LoggedInView: View {
     var body: some View {
         // ZStack 대신 TabView를 사용하여 화면 상단에 환영 메시지를 띄웁니다.
         // NavigationView를 사용하지 않으므로, 환영 메시지는 탭 내용 위에 고정됩니다.
-        VStack(spacing: 0) {
+        VStack() {
             // 1. 환영 메시지 영역
-            Text("\(username)님, 로그인에 성공했습니다.")
-                .font(.headline)
-                .padding(.top, 50)
-                .padding(.bottom, 20)
+            
             
             // 2. 탭 뷰 (본문 콘텐츠)
             TabView(selection: $selectedTab) {
@@ -42,8 +42,7 @@ struct LoggedInView: View {
                     .tag(1)
                 
                 // MARK: - 추천 여행지 탭
-                // RecommendedTripView()
-                Text("추천 탭 준비 중...")
+                RecommendedTripView()
                     .tabItem {
                         Image(systemName: "map.fill")
                         Text("추천")

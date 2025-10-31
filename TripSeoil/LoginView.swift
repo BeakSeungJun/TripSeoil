@@ -4,6 +4,8 @@ import KakaoSDKCommon
 import KakaoSDKAuth
 import KakaoSDKUser
 import Combine
+import GoogleMaps
+
 
 // MARK: - 1. 로그인 UI를 담당하는 View
 struct LoginView: View {
