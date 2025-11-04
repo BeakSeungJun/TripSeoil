@@ -373,7 +373,7 @@ struct PlaceInfoView: View {
             Text(place.formattedAddress ?? "주소 정보 없음")
                 .font(.subheadline)
             
-            // --- 2. 장소 유형 표시 (전화번호 제거됨) ---
+            // --- 2. 장소 유형 표시 
             HStack(spacing: 12) {
                 
                 // --- 수정: 보다 의미 있는 장소 유형 필터링 ---
