@@ -1,0 +1,1 @@
+Argument passed to call that takes no arguments

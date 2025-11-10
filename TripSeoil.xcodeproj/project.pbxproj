@@ -40,6 +40,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5B3B89F12EC20A4700774CA7 /* File.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = File.txt; sourceTree = "<group>"; };
 		5B80363E2E7911B100E215FD /* TripSeoil.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TripSeoil.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B80364B2E7911B200E215FD /* TripSeoilTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TripSeoilTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B8036552E7911B200E215FD /* TripSeoilUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TripSeoilUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -117,6 +118,7 @@
 		5B1D35132EB054DD00E48119 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5B3B89F12EC20A4700774CA7 /* File.txt */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

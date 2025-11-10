@@ -43,10 +43,13 @@ final class WeatherViewModel: ObservableObject {
     // API 키를 여기에 입력하세요.
     private let apiKey = "c35246e1b2ee9c9c3907fb09d813735e"
     
-    init() {
-        // ViewModel이 생성될 때 초기 날씨 정보를 가져옵니다.
-        fetchWeather()
-    }
+    // [수정] init()이 (initialCity: String) 파라미터를 받도록 변경
+        init(initialCity: String = "Seoul") {
+            self.searchText = initialCity // 전달받은 도시로 searchText 설정
+            
+            // ViewModel이 생성될 때 초기 날씨 정보를 가져옵니다.
+            fetchWeather()
+        }
     
     // MARK: - 날씨 정보 가져오기
     func fetchWeather() {
