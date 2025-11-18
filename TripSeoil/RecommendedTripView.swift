@@ -2,9 +2,9 @@ import SwiftUI
 import GoogleMaps
 import GooglePlaces
 import Combine
+import CoreLocation // 위치 기능에 필요
 
-// MARK: - 3. 관광지 카테고리 (CitySelectionView의 내용)
-// [수정] 이 파일에 TourismCategory가 포함되어 오류가 해결됩니다.
+// MARK: - 3. 관광지 카테고리
 enum TourismCategory: String, CaseIterable, Identifiable {
     case natural = "🏞️ 자연 관광지"
     case historical = "🏛️ 역사/문화 관광지"
@@ -36,57 +36,45 @@ enum TourismCategory: String, CaseIterable, Identifiable {
     }
 }
 
-
 // MARK: - 4. 메인 지도 뷰 (모든 기능 통합)
 struct RecommendedTripView: View {
     
     // --- 뷰 모델 ---
-    // 이 뷰가 WeatherViewModel을 직접 소유
     @StateObject private var weatherViewModel = WeatherViewModel()
+    @StateObject private var locationManager = LocationManager() // LocationManager.swift 파일의 클래스를 사용
     
     // --- 상태 (State) ---
     @State private var selectedPlace: GMSPlace?
     @State private var searchErrorMessage: String?
     
-    // CitySelectionView의 @State를 이 뷰로 가져옴
     @State private var selectedCategory: TourismCategory = .historical
-    @State private var cityNameQuery: String = "Seoul" // 로컬 검색창용
+    @State private var cityNameQuery: String = "Seoul"
+    
+    @State private var isFetchingLocation = false
     
     // --- 상수 (Constants) ---
     private let placesClient = GMSPlacesClient.shared()
     private let seoulCoords = CLLocationCoordinate2D(latitude: 37.5665, longitude: 126.9780)
     
     private let mapCommandPublisher = PassthroughSubject<MapCommand, Never>()
-
-    // --- init 및 Environment(\.dismiss) 제거 ---
     
     // MARK: - 추천 로직
     private func recommendPlaceByCategory() {
-        // 1. 도시 이름 가져오기 (뷰모델의 현재 도시)
         let currentCity = weatherViewModel.searchText
-        
-        // 2. 선택된 카테고리에서 검색어 목록 가져오기
         let keywords = selectedCategory.searchKeywords
         
-        // 3. 목록에서 무작위 키워드 선택
         guard let randomQuery = keywords.randomElement() else {
             searchErrorMessage = "추천 검색어를 생성하지 못했습니다."
             return
         }
 
-        // 4. 최종 검색어 조합 (예: "museum in London")
         let finalQuery = "\(randomQuery) in \(currentCity)"
-        
         print("카테고리: \(selectedCategory.shortName) -> 추천 검색: \(finalQuery)")
-        
-        // 5. 검색 실행
         performSearch(query: finalQuery)
     }
 
     // MARK: - Google Places API 검색
     private func performSearch(query: String) {
-        // [수정] 검색 시작 시 selectedPlace를 nil로 설정
-        // PlaceInfoView를 파괴(destroy)하고 재생성(re-create)하기 위함.
         self.selectedPlace = nil
         mapCommandPublisher.send(.clearMarkers)
         searchErrorMessage = nil
@@ -141,17 +129,33 @@ struct RecommendedTripView: View {
         }
     }
     
-    /** [신규] 도시 검색 버튼 액션 */
+    /** 도시 검색 버튼 액션 */
     private func searchForCity() {
-        // 1. 뷰모델의 도시를 업데이트하고 날씨를 가져옴
         weatherViewModel.searchCity(cityName: cityNameQuery)
-        // 2. 지도를 해당 도시로 이동
         performSearch(query: cityNameQuery)
+    }
+
+    /** 현재 위치 기반 추천 */
+    private func recommendByCurrentLocation() {
+        self.isFetchingLocation = true
+        self.searchErrorMessage = nil
+        
+        locationManager.requestCityName { [self] cityName in
+            self.isFetchingLocation = false
+            
+            guard let cityName = cityName, !cityName.isEmpty else {
+                self.searchErrorMessage = "현재 위치의 도시 정보를 가져오지 못했습니다."
+                return
+            }
+            
+            self.cityNameQuery = cityName
+            weatherViewModel.searchCity(cityName: cityName)
+            self.recommendPlaceByCategory()
+        }
     }
 
     // MARK: - Body
     var body: some View {
-        // NavigationStack 제거됨
         ZStack(alignment: .bottom) {
             // --- 1. Google Map View ---
             GoogleMapView(
@@ -167,11 +171,12 @@ struct RecommendedTripView: View {
             // --- 2. 상단 UI (도시/테마 선택, 추천 버튼) ---
             VStack(spacing: 0) {
                 
-                // [신규] 도시/테마 선택 헤더 (SearchBarView 대체)
                 SearchAndCategoryHeaderView(
                     cityNameQuery: $cityNameQuery,
                     selectedCategory: $selectedCategory,
-                    onSearch: searchForCity // "도시 검색" 버튼 액션
+                    onSearch: searchForCity,
+                    onGetLocation: recommendByCurrentLocation,
+                    isFetchingLocation: isFetchingLocation
                 )
                 
                 // [버튼] 카테고리 기반 추천
@@ -206,6 +211,15 @@ struct RecommendedTripView: View {
                         .padding(.horizontal)
                 }
                 
+                // 위치 권한 거부 시 안내 메시지
+                if locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted {
+                    Text("위치 권한이 거부되었습니다. '내 위치' 기능을 사용하려면 설정에서 권한을 허용해주세요.")
+                        .font(.caption)
+                        .foregroundColor(.red)
+                        .padding(.horizontal)
+                        .padding(.bottom, 5)
+                }
+                
                 // 검색 오류 메시지
                 if let searchError = searchErrorMessage {
                     Text(searchError)
@@ -227,34 +241,47 @@ struct RecommendedTripView: View {
                     PlaceInfoView(place: place, placesClient: placesClient)
                         .frame(height: 300)
                         .transition(.move(edge: .bottom).combined(with: .opacity))
-                        // [수정] .id() 수정자 제거 (캐싱 문제 해결)
                 }
             }
             .animation(.spring(), value: selectedPlace)
-
-            // --- 뒤로가기 버튼 제거됨 ---
         }
         .onAppear {
-            // 뷰가 처음 나타날 때, 기본 도시 "Seoul"로 검색
-            performSearch(query: cityNameQuery) // "Seoul"
+            searchForCity()
+            locationManager.requestPermission()
         }
     }
 }
 
 // MARK: - 5. UI 컴포넌트
 
-// --- [신규] 도시/테마 선택 헤더 ---
+// --- [수정] 도시/테마 선택 헤더 ---
 struct SearchAndCategoryHeaderView: View {
     @Binding var cityNameQuery: String
     @Binding var selectedCategory: TourismCategory
     var onSearch: () -> Void
+    var onGetLocation: () -> Void
+    var isFetchingLocation: Bool
     
     var body: some View {
         VStack(spacing: 10) {
             HStack(spacing: 8) {
+                
+                Button(action: onGetLocation) {
+                    if isFetchingLocation {
+                        ProgressView()
+                            .frame(width: 24, height: 24)
+                    } else {
+                        Image(systemName: "location.circle.fill")
+                            .font(.title2)
+                    }
+                }
+                .padding(.leading, 4)
+                .foregroundColor(.blue)
+                .disabled(isFetchingLocation)
+                
                 TextField("도시 이름 (예: London, Paris)", text: $cityNameQuery)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .onSubmit(onSearch) // 엔터키로 검색
+                    .onSubmit(onSearch)
                 
                 Button(action: onSearch) {
                     Image(systemName: "magnifyingglass")
@@ -267,7 +294,7 @@ struct SearchAndCategoryHeaderView: View {
             
             Picker("관광지 종류", selection: $selectedCategory) {
                 ForEach(TourismCategory.allCases) { category in
-                    Text(category.shortName).tag(category) // 짧은 이름 사용
+                    Text(category.shortName).tag(category)
                 }
             }
             .pickerStyle(SegmentedPickerStyle())
@@ -386,36 +413,34 @@ struct PlaceInfoView: View {
                     photoPlaceholderView // 사진이 없거나 로드 중일 때의 뷰
                 }
                 
-                // --- [신규] 사진 보기 버튼 ---
+                // --- 사진 보기 버튼 ---
                 if hasPhotos {
-                if placeImage == nil {
-                    // "사진 보기" 버튼 (로딩 중이 아닐 때만)
-                    if !isLoadingImage {
-                        Button(action: loadImage) {
-                            Label("사진 보기", systemImage: "photo")
+                    if placeImage == nil {
+                        if !isLoadingImage {
+                            Button(action: loadImage) {
+                                Label("사진 보기", systemImage: "photo")
+                                    .font(.subheadline).fontWeight(.medium)
+                                    .padding(.horizontal, 12).padding(.vertical, 8)
+                                    .background(Color.orange.opacity(0.2))
+                                    .foregroundColor(.orange)
+                                    .cornerRadius(10)
+                            }
+                            .padding(.top, -5)
+                        }
+                    } else {
+                        Button(action: {
+                            placeImage = nil
+                        }) {
+                            Label("사진 닫기", systemImage: "xmark.circle")
                                 .font(.subheadline).fontWeight(.medium)
                                 .padding(.horizontal, 12).padding(.vertical, 8)
-                                .background(Color.orange.opacity(0.2))
-                                .foregroundColor(.orange)
+                                .background(Color.gray.opacity(0.2))
+                                .foregroundColor(.gray)
                                 .cornerRadius(10)
                         }
-                        .padding(.top, -5) // 사진 영역과 살짝 겹치게
+                        .padding(.top, -5)
                     }
-                } else {
-                    // "사진 닫기" 버튼 (사진이 로드되었을 때)
-                    Button(action: {
-                        placeImage = nil // 사진을 숨김
-                    }) {
-                        Label("사진 닫기", systemImage: "xmark.circle")
-                            .font(.subheadline).fontWeight(.medium)
-                            .padding(.horizontal, 12).padding(.vertical, 8)
-                            .background(Color.gray.opacity(0.2))
-                            .foregroundColor(.gray)
-                            .cornerRadius(10)
-                    }
-                    .padding(.top, -5) // 사진 영역과 살짝 겹치게
                 }
-            }
                 
                 // --- 2. 기본 정보 ---
                 Text(place.name ?? "이름 없음")
@@ -470,15 +495,10 @@ struct PlaceInfoView: View {
         .background(Color.white)
         .cornerRadius(20, corners: [.topLeft, .topRight])
         .shadow(radius: 10)
-        // [수정] .onAppear에서 placeImage를 nil로 리셋
-        // 부모 뷰가 selectedPlace = nil로 이 뷰를 파괴하고 재생성하므로,
-        // .onAppear가 항상 호출됨.
         .onAppear {
-            // 장소 뷰가 나타날 때마다 사진과 로딩 상태를 초기화
             placeImage = nil
             isLoadingImage = false
         }
-        // [수정] .onChange 제거 ( .id() 수정자 제거로 인해 불필요)
     }
     
     // MARK: - 2. View 빌더 및 헬퍼 함수
@@ -510,7 +530,7 @@ struct PlaceInfoView: View {
     
     private func loadImage() {
         guard let photoMetadata = place.photos?.first else {
-            isLoadingImage = false // 사진이 없으면 로딩 종료
+            isLoadingImage = false
             return
         }
         
@@ -528,7 +548,7 @@ struct PlaceInfoView: View {
     }
 }
 
-// MARK: - 6. Google Map 래퍼 (UIViewRepresentable) - [수정됨]
+// MARK: - 6. Google Map 래퍼 (UIViewRepresentable)
 
 enum MapCommand {
     case clearMarkers
@@ -543,11 +563,9 @@ struct GoogleMapView: UIViewRepresentable {
     let initialCamera: GMSCameraPosition
     let commandPublisher: AnyPublisher<MapCommand, Never>
     
-    // [수정] GMSMapView를 @State로 소유하여 탭 전환 시에도 유지
     @State private var mapView = GMSMapView()
     
     func makeUIView(context: Context) -> GMSMapView {
-        // @State로 선언된 mapView를 사용
         mapView.camera = initialCamera
         mapView.isMyLocationEnabled = true
         mapView.settings.myLocationButton = true
@@ -556,10 +574,7 @@ struct GoogleMapView: UIViewRepresentable {
         
         mapView.delegate = context.coordinator
         
-        // Coordinator에게 mapView 인스턴스 전달
         context.coordinator.setMapView(mapView)
-        
-        // 구독은 Coordinator.init에서 즉시 시작됨
         
         return mapView
     }
@@ -567,13 +582,11 @@ struct GoogleMapView: UIViewRepresentable {
     func updateUIView(_ uiView: GMSMapView, context: Context) {}
     
     func makeCoordinator() -> Coordinator {
-        // Coordinator가 mapView를 생성하지 않음
         return Coordinator(commandPublisher: commandPublisher)
     }
     
     final class Coordinator: NSObject, GMSMapViewDelegate {
         
-        // [수정] mapView를 약한 참조(weak)로, 나중에 설정
         weak var mapView: GMSMapView?
         private var commandPublisher: AnyPublisher<MapCommand, Never>
         private var cancellables = Set<AnyCancellable>()
@@ -581,12 +594,9 @@ struct GoogleMapView: UIViewRepresentable {
         init(commandPublisher: AnyPublisher<MapCommand, Never>) {
             self.commandPublisher = commandPublisher
             super.init()
-            
-            // [수정] Coordinator가 생성되는 즉시 구독을 시작합니다.
             subscribeToCommandPublisher()
         }
         
-        // makeUIView에서 mapView를 설정하기 위한 함수
         func setMapView(_ mapView: GMSMapView) {
             self.mapView = mapView
         }
@@ -594,10 +604,8 @@ struct GoogleMapView: UIViewRepresentable {
         func subscribeToCommandPublisher() {
             commandPublisher
                 .receive(on: DispatchQueue.main)
-                // [수정] [weak self]를 다시 사용하여 메모리 누수 방지
                 .sink { [weak self] command in
                     
-                    // [수정] self와 mapView가 모두 유효할 때만 실행
                     guard let self = self, let mapView = self.mapView else { return }
                     
                     switch command {
@@ -655,7 +663,6 @@ struct RoundedCorner: Shape {
 #if DEBUG
 struct RecommendedTripView_Previews: PreviewProvider {
     static var previews: some View {
-        // 프리뷰가 통합되었으므로 init 파라미터나 EnvironmentObject가 필요 없음
         RecommendedTripView()
     }
 }
