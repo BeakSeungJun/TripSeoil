@@ -20,7 +20,7 @@ struct TravelApp: App {
         KakaoSDK.initSDK(appKey: "94b80d568ff2f6e06275e2f22a6ea8ee")
 
         // Google Maps SDK 초기화 (앱 키를 사용하여)
-        GMSServices.provideAPIKey("AIzaSyAyWUuq6RwQ-qAo4KOgVE8Vk4-cBspN_bY") // <-- 이 부분 추가
+        GMSServices.provideAPIKey("AIzaSyAyWUuq6RwQ-qAo4KOgVE8Vk4-cBspN_bY") 
         GMSPlacesClient.provideAPIKey("AIzaSyAyWUuq6RwQ-qAo4KOgVE8Vk4-cBspN_bY")
         // ... Kakao SDK 초기화 등
     }

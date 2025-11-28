@@ -2,7 +2,7 @@ import SwiftUI
 import GoogleMaps
 import GooglePlaces
 import Combine
-import CoreLocation // 위치 기능에 필요
+import CoreLocation
 
 // MARK: - 3. 관광지 카테고리
 enum TourismCategory: String, CaseIterable, Identifiable {
@@ -39,9 +39,10 @@ enum TourismCategory: String, CaseIterable, Identifiable {
 // MARK: - 4. 메인 지도 뷰 (모든 기능 통합)
 struct RecommendedTripView: View {
     
-    // --- 뷰 모델 ---
+    // --- 뷰 모델 및 저장소 ---
     @StateObject private var weatherViewModel = WeatherViewModel()
-    @StateObject private var locationManager = LocationManager() // LocationManager.swift 파일의 클래스를 사용
+    @StateObject private var locationManager = LocationManager()
+    @EnvironmentObject var favoriteStore: FavoriteStore // 즐겨찾기 저장소
     
     // --- 상태 (State) ---
     @State private var selectedPlace: GMSPlace?
@@ -50,11 +51,14 @@ struct RecommendedTripView: View {
     @State private var selectedCategory: TourismCategory = .historical
     @State private var cityNameQuery: String = "Seoul"
     
+    // [신규] 현재 검색된 도시의 중심 좌표 (기본값: 서울)
+    // 이 좌표를 기준으로 주변 장소를 검색하여 '위치 튐' 현상을 방지합니다.
+    @State private var currentCityCoordinate: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 37.5665, longitude: 126.9780)
+    
     @State private var isFetchingLocation = false
     
     // --- 상수 (Constants) ---
     private let placesClient = GMSPlacesClient.shared()
-    private let seoulCoords = CLLocationCoordinate2D(latitude: 37.5665, longitude: 126.9780)
     
     private let mapCommandPublisher = PassthroughSubject<MapCommand, Never>()
     
@@ -68,12 +72,14 @@ struct RecommendedTripView: View {
             return
         }
 
+        // 검색어 조합 (예: "museum in Seoul")
         let finalQuery = "\(randomQuery) in \(currentCity)"
         print("카테고리: \(selectedCategory.shortName) -> 추천 검색: \(finalQuery)")
+        
         performSearch(query: finalQuery)
     }
 
-    // MARK: - Google Places API 검색
+    // MARK: - Google Places API 검색 (위치 제한 적용)
     private func performSearch(query: String) {
         self.selectedPlace = nil
         mapCommandPublisher.send(.clearMarkers)
@@ -84,11 +90,27 @@ struct RecommendedTripView: View {
             return
         }
         
+        // [수정] 검색 필터에 '위치 제한(Restriction)' 적용
         let filter = GMSAutocompleteFilter()
+        
+        // 현재 설정된 도시 좌표(currentCityCoordinate)를 기준으로
+        // 사방 약 0.5도(대략 50km 반경)의 영역을 설정
+        let delta = 0.5
+        let northEast = CLLocationCoordinate2D(
+            latitude: currentCityCoordinate.latitude + delta,
+            longitude: currentCityCoordinate.longitude + delta
+        )
+        let southWest = CLLocationCoordinate2D(
+            latitude: currentCityCoordinate.latitude - delta,
+            longitude: currentCityCoordinate.longitude - delta
+        )
+        
+        // 이 영역 안의 결과만 반환하도록 강제함 (다른 나라로 튀는 현상 방지)
+        filter.locationRestriction = GMSPlaceRectangularLocationOption(northEast, southWest)
         
         placesClient.findAutocompletePredictions(
             fromQuery: query,
-            filter: filter,
+            filter: filter, // 필터 적용
             sessionToken: nil
         ) { (predictions, error) in
             
@@ -97,14 +119,15 @@ struct RecommendedTripView: View {
                 return
             }
             guard let firstPrediction = predictions?.first else {
-                self.searchErrorMessage = "'\(query)'에 대한 검색 결과가 없습니다."
+                self.searchErrorMessage = "'\(query)'에 대한 검색 결과가 없습니다.\n(현재 도시: \(weatherViewModel.searchText))"
                 return
             }
             
             let placeID = firstPrediction.placeID
+            // [중요] .placeID 포함 (즐겨찾기 기능용)
             let fields: GMSPlaceField = [
                 .name, .coordinate, .formattedAddress, .openingHours, .rating,
-                .photos, .types
+                .photos, .types, .placeID
             ]
             
             self.placesClient.fetchPlace(
@@ -129,13 +152,28 @@ struct RecommendedTripView: View {
         }
     }
     
-    /** 도시 검색 버튼 액션 */
+    /** [수정] 도시 검색 및 좌표 업데이트 */
     private func searchForCity() {
+        // 1. 날씨 뷰모델 업데이트
         weatherViewModel.searchCity(cityName: cityNameQuery)
-        performSearch(query: cityNameQuery)
+        
+        // 2. 입력된 도시 이름으로 실제 좌표 찾기 (Geocoding)
+        let geocoder = CLGeocoder()
+        geocoder.geocodeAddressString(cityNameQuery) { placemarks, error in
+            if let coordinate = placemarks?.first?.location?.coordinate {
+                // 좌표를 찾았으면 업데이트 -> 이후 추천 검색은 이 좌표 주변에서 실행됨
+                self.currentCityCoordinate = coordinate
+                
+                // 변경: 마커 없이 카메라만 이동
+                self.mapCommandPublisher.send(.moveCamera(to: coordinate))
+                                
+                // 도시 자체를 검색어로 한 번 실행
+                self.performSearch(query: self.cityNameQuery)
+            }
+        }
     }
 
-    /** 현재 위치 기반 추천 */
+    /** [수정] 현재 위치 기반 추천 */
     private func recommendByCurrentLocation() {
         self.isFetchingLocation = true
         self.searchErrorMessage = nil
@@ -150,6 +188,12 @@ struct RecommendedTripView: View {
             
             self.cityNameQuery = cityName
             weatherViewModel.searchCity(cityName: cityName)
+            
+            // [신규] 현재 위치 좌표로 기준점 업데이트
+            if let location = locationManager.location {
+                self.currentCityCoordinate = location.coordinate
+            }
+            
             self.recommendPlaceByCategory()
         }
     }
@@ -160,8 +204,8 @@ struct RecommendedTripView: View {
             // --- 1. Google Map View ---
             GoogleMapView(
                 initialCamera: GMSCameraPosition.camera(
-                    withLatitude: seoulCoords.latitude,
-                    longitude: seoulCoords.longitude,
+                    withLatitude: 37.5665,
+                    longitude: 126.9780,
                     zoom: 12.0
                 ),
                 commandPublisher: mapCommandPublisher.eraseToAnyPublisher()
@@ -246,7 +290,7 @@ struct RecommendedTripView: View {
             .animation(.spring(), value: selectedPlace)
         }
         .onAppear {
-            searchForCity()
+            searchForCity() // 앱 시작 시 기본 도시(서울) 설정
             locationManager.requestPermission()
         }
     }
@@ -254,7 +298,7 @@ struct RecommendedTripView: View {
 
 // MARK: - 5. UI 컴포넌트
 
-// --- [수정] 도시/테마 선택 헤더 ---
+// --- 도시/테마 선택 헤더 ---
 struct SearchAndCategoryHeaderView: View {
     @Binding var cityNameQuery: String
     @Binding var selectedCategory: TourismCategory
@@ -336,15 +380,15 @@ struct MapControlButtons: View {
 }
 
 
-// --- 장소 정보 뷰 ---
+// --- [UI 개선됨] 장소 정보 뷰 ---
 struct PlaceInfoView: View {
     let place: GMSPlace
     let placesClient: GMSPlacesClient
     
+    @EnvironmentObject var favoriteStore: FavoriteStore
+    
     @State private var placeImage: Image?
     @State private var isLoadingImage = false
-    
-    // MARK: - 1. 로직 분리 (Computed Properties for DATA)
     
     private var hasPhotos: Bool { place.photos != nil }
     
@@ -371,9 +415,7 @@ struct PlaceInfoView: View {
         } else {
             typesToFormat = allTypes.first.map { [$0] } ?? []
         }
-        
         if typesToFormat.isEmpty { return nil }
-        
         return typesToFormat
             .map { $0.replacingOccurrences(of: "_", with: " ").capitalized }
             .joined(separator: " / ")
@@ -401,96 +443,127 @@ struct PlaceInfoView: View {
     
     // MARK: - Body
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 12) {
-                
-                // --- 1. 사진 영역 (조건부 표시) ---
-                if let image = placeImage {
-                    image
-                        .resizable().aspectRatio(contentMode: .fill)
-                        .frame(height: 150).clipped().cornerRadius(10)
-                } else {
-                    photoPlaceholderView // 사진이 없거나 로드 중일 때의 뷰
-                }
-                
-                // --- 사진 보기 버튼 ---
-                if hasPhotos {
-                    if placeImage == nil {
-                        if !isLoadingImage {
-                            Button(action: loadImage) {
-                                Label("사진 보기", systemImage: "photo")
-                                    .font(.subheadline).fontWeight(.medium)
-                                    .padding(.horizontal, 12).padding(.vertical, 8)
-                                    .background(Color.orange.opacity(0.2))
-                                    .foregroundColor(.orange)
-                                    .cornerRadius(10)
-                            }
-                            .padding(.top, -5)
-                        }
-                    } else {
-                        Button(action: {
-                            placeImage = nil
-                        }) {
-                            Label("사진 닫기", systemImage: "xmark.circle")
-                                .font(.subheadline).fontWeight(.medium)
-                                .padding(.horizontal, 12).padding(.vertical, 8)
-                                .background(Color.gray.opacity(0.2))
-                                .foregroundColor(.gray)
-                                .cornerRadius(10)
-                        }
-                        .padding(.top, -5)
-                    }
-                }
-                
-                // --- 2. 기본 정보 ---
-                Text(place.name ?? "이름 없음")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                
-                Text(place.formattedAddress ?? "주소 정보 없음")
-                    .font(.subheadline)
-                
-                // --- 3. 평점 및 영업시간 ---
-                HStack(spacing: 12) {
-                    if let rating = ratingString {
-                        HStack(spacing: 4) {
-                            Image(systemName: "star.fill").foregroundColor(.yellow)
-                            Text(rating).fontWeight(.medium)
-                        }.font(.subheadline)
-                    }
+        VStack(spacing: 0) {
+            // 1. 헤더 영역 (고정)
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(place.name ?? "이름 없음")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .lineLimit(1)
                     
-                    if let status = openStatus {
-                        Text(status.text)
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                            .foregroundColor(status.isOpen ? .green : .red)
+                    if let address = place.formattedAddress {
+                        Text(address)
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                            .lineLimit(1)
                     }
                 }
-
-                // --- 4. 장소 유형 태그 (실내/실외 포함) ---
-                HStack(spacing: 8) {
-                    if let categoryString = categoryTagString {
-                        Text(categoryString)
-                            .font(.caption).fontWeight(.medium)
-                            .padding(.horizontal, 8).padding(.vertical, 4)
-                            .background(Color.blue.opacity(0.1)).foregroundColor(.blue)
-                            .cornerRadius(8)
-                    }
-                    
-                    if let tag = locationTypeTag {
-                        Text(tag.type)
-                            .font(.caption).fontWeight(.medium)
-                            .padding(.horizontal, 8).padding(.vertical, 4)
-                            .background(tag.isIndoor ? Color.purple.opacity(0.1) : Color.green.opacity(0.1))
-                            .foregroundColor(tag.isIndoor ? .purple : .green)
-                            .cornerRadius(8)
-                    }
-                    Spacer()
-                }
-                .padding(.top, 2)
                 
+                Spacer()
+                
+                // ❤️ 하트 버튼
+                let placeID = place.placeID ?? UUID().uuidString
+                let isFavorite = favoriteStore.isFavorite(placeID)
+                
+                Button(action: {
+                    favoriteStore.toggleFavorite(
+                        id: placeID,
+                        name: place.name ?? "이름 없음",
+                        address: place.formattedAddress ?? "",
+                        coordinate: place.coordinate
+                    )
+                }) {
+                    Image(systemName: isFavorite ? "heart.fill" : "heart")
+                        .font(.title)
+                        .foregroundColor(isFavorite ? .red : .gray.opacity(0.5))
+                        .animation(.spring(), value: isFavorite)
+                }
             }
             .padding()
+            .background(Color.white)
+            
+            Divider()
+            
+            // 2. 스크롤 내용 영역
+            ScrollView {
+                VStack(alignment: .leading, spacing: 12) {
+                    
+                    if let image = placeImage {
+                        image
+                            .resizable().aspectRatio(contentMode: .fill)
+                            .frame(height: 180)
+                            .clipped().cornerRadius(10)
+                    } else {
+                        photoPlaceholderView
+                    }
+                    
+                    if hasPhotos {
+                        HStack {
+                            Spacer()
+                            if placeImage == nil {
+                                if !isLoadingImage {
+                                    Button(action: loadImage) {
+                                        Label("사진 불러오기", systemImage: "photo")
+                                            .font(.caption).bold()
+                                            .padding(8)
+                                            .background(Color.blue.opacity(0.1))
+                                            .foregroundColor(.blue)
+                                            .cornerRadius(8)
+                                    }
+                                }
+                            } else {
+                                Button(action: { placeImage = nil }) {
+                                    Label("사진 닫기", systemImage: "xmark")
+                                        .font(.caption).bold()
+                                        .padding(8)
+                                        .background(Color.gray.opacity(0.1))
+                                        .foregroundColor(.gray)
+                                        .cornerRadius(8)
+                                }
+                            }
+                            Spacer()
+                        }
+                    }
+                    
+                    HStack(spacing: 12) {
+                        if let rating = ratingString {
+                            HStack(spacing: 4) {
+                                Image(systemName: "star.fill").foregroundColor(.yellow)
+                                Text(rating).fontWeight(.medium)
+                            }.font(.subheadline)
+                        }
+                        
+                        if let status = openStatus {
+                            Text(status.text)
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .foregroundColor(status.isOpen ? .green : .red)
+                        }
+                    }
+                    
+                    HStack(spacing: 8) {
+                        if let categoryString = categoryTagString {
+                            Text(categoryString)
+                                .font(.caption).fontWeight(.medium)
+                                .padding(.horizontal, 8).padding(.vertical, 4)
+                                .background(Color.blue.opacity(0.1)).foregroundColor(.blue)
+                                .cornerRadius(8)
+                        }
+                        
+                        if let tag = locationTypeTag {
+                            Text(tag.type)
+                                .font(.caption).fontWeight(.medium)
+                                .padding(.horizontal, 8).padding(.vertical, 4)
+                                .background(tag.isIndoor ? Color.purple.opacity(0.1) : Color.green.opacity(0.1))
+                                .foregroundColor(tag.isIndoor ? .purple : .green)
+                                .cornerRadius(8)
+                        }
+                        Spacer()
+                    }
+                }
+                .padding()
+            }
         }
         .background(Color.white)
         .cornerRadius(20, corners: [.topLeft, .topRight])
@@ -500,8 +573,6 @@ struct PlaceInfoView: View {
             isLoadingImage = false
         }
     }
-    
-    // MARK: - 2. View 빌더 및 헬퍼 함수
     
     @ViewBuilder
     private var photoPlaceholderView: some View {
@@ -517,13 +588,15 @@ struct PlaceInfoView: View {
                 VStack {
                     Image(systemName: "photo.on.rectangle.angled")
                         .font(.largeTitle)
-                        .foregroundColor(.gray.opacity(0.5))
-                    Text("제공되는 사진이 없습니다.")
+                        .foregroundColor(.gray.opacity(0.3))
+                    Text("사진 없음")
                         .font(.caption)
                         .foregroundColor(.gray)
                 }
             } else {
-                // "사진 보기" 버튼이 표시될 영역 (빈 공간)
+                Text("📷 사진을 보려면 버튼을 누르세요")
+                    .font(.caption)
+                    .foregroundColor(.gray)
             }
         }
     }
@@ -539,8 +612,6 @@ struct PlaceInfoView: View {
             DispatchQueue.main.async {
                 if let photo = photo {
                     self.placeImage = Image(uiImage: photo)
-                } else if let error = error {
-                    print("사진 로드 오류: \(error.localizedDescription)")
                 }
                 self.isLoadingImage = false
             }
@@ -548,11 +619,11 @@ struct PlaceInfoView: View {
     }
 }
 
-// MARK: - 6. Google Map 래퍼 (UIViewRepresentable)
-
+// MARK: - 6. Google Map 래퍼
 enum MapCommand {
     case clearMarkers
     case addMarker(place: GMSPlace, camera: CameraUpdate)
+    case moveCamera(to: CLLocationCoordinate2D)
     case zoomIn
     case zoomOut
 }
@@ -573,9 +644,7 @@ struct GoogleMapView: UIViewRepresentable {
         mapView.settings.zoomGestures = true
         
         mapView.delegate = context.coordinator
-        
         context.coordinator.setMapView(mapView)
-        
         return mapView
     }
     
@@ -586,7 +655,6 @@ struct GoogleMapView: UIViewRepresentable {
     }
     
     final class Coordinator: NSObject, GMSMapViewDelegate {
-        
         weak var mapView: GMSMapView?
         private var commandPublisher: AnyPublisher<MapCommand, Never>
         private var cancellables = Set<AnyCancellable>()
@@ -605,29 +673,26 @@ struct GoogleMapView: UIViewRepresentable {
             commandPublisher
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] command in
-                    
                     guard let self = self, let mapView = self.mapView else { return }
-                    
                     switch command {
                     case .clearMarkers:
                         mapView.clear()
-                        
                     case .addMarker(let place, let cameraUpdate):
                         mapView.clear()
                         let marker = GMSMarker(position: place.coordinate)
                         marker.title = place.name
                         marker.snippet = place.formattedAddress
                         marker.map = mapView
-                        
                         if case .move = cameraUpdate {
                             let camera = GMSCameraPosition.camera(withTarget: place.coordinate, zoom: 15)
                             mapView.animate(to: camera)
                         }
-                        
+                    case .moveCamera(let coordinate):
+                                            let camera = GMSCameraPosition.camera(withTarget: coordinate, zoom: 12)
+                                            mapView.animate(to: camera)
                     case .zoomIn:
                         let currentZoom = mapView.camera.zoom
                         mapView.animate(toZoom: currentZoom + 1)
-                        
                     case .zoomOut:
                         let currentZoom = mapView.camera.zoom
                         mapView.animate(toZoom: currentZoom - 1)
@@ -664,6 +729,7 @@ struct RoundedCorner: Shape {
 struct RecommendedTripView_Previews: PreviewProvider {
     static var previews: some View {
         RecommendedTripView()
+            .environmentObject(FavoriteStore())
     }
 }
 #endif

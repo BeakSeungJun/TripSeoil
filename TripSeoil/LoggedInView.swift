@@ -11,6 +11,8 @@ import GooglePlaces
 struct LoggedInView: View {
     let username: String
     
+    @StateObject private var favoriteStore = FavoriteStore()
+    
     // 현재 선택된 탭을 추적하는 상태 변수
     @State private var selectedTab = 0
     
@@ -43,18 +45,19 @@ struct LoggedInView: View {
                 
                 // MARK: - 추천 여행지 탭
                 RecommendedTripView()
+                    .environmentObject(favoriteStore)
                     .tabItem {
                         Image(systemName: "map.fill")
                         Text("추천")
                     }
                     .tag(2)
                 
-                // MARK: - 가계부 탭
-                // TravelLedgerView()
-                Text("가계부 탭 준비 중...")
+                // MARK: - 길찾기 탭
+                TripPlannerView()
+                    .environmentObject(favoriteStore)
                     .tabItem {
-                        Image(systemName: "book.fill")
-                        Text("가계부")
+                        Image(systemName: "arrow.triangle.turn.up.right.circle.fill")
+                        Text("길찾기")
                     }
                     .tag(3)
                 
@@ -63,7 +66,7 @@ struct LoggedInView: View {
                 Text("기록 탭 준비 중...")
                     .tabItem {
                         Image(systemName: "pencil.circle.fill")
-                        Text("기록")
+                        Text("즐겨찾기")
                     }
                     .tag(4)
             }
@@ -78,4 +81,5 @@ struct LoggedInView: View {
 // MARK: - 미리보기
 #Preview {
     LoggedInView(username: "홍길동")
+        .environmentObject(FavoriteStore())
 }

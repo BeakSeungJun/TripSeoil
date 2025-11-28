@@ -76,34 +76,44 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     }
     
     /// 위치 정보를 성공적으로 가져왔을 때
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.first else {
-            finishRequest(with: nil)
-            return
-        }
-        
-        self.location = location
-        
-        // 4. 좌표 -> 도시 이름 변환 (리버스 지오코딩)
-        geocoder.reverseGeocodeCoordinate(location.coordinate) { [weak self] (response, error) in
-            guard let self = self else { return }
-            
-            if let error = error {
-                print("GMSGeocoder 오류: \(error.localizedDescription)")
-                self.finishRequest(with: nil)
+    // LocationManager.swift
+
+        func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+            guard let location = locations.first else {
+                finishRequest(with: nil)
                 return
             }
             
-            if let address = response?.firstResult() {
-                // 'locality'는 "Seoul" 같은 도시 이름, 'administrativeArea'는 "Seoul Metropolitan Government" 같은 행정 구역
-                let city = address.locality ?? address.administrativeArea
-                self.cityName = city
-                self.finishRequest(with: city)
-            } else {
-                self.finishRequest(with: nil)
+            self.location = location
+            
+            // 4. 좌표 -> 도시 이름 변환 (리버스 지오코딩)
+            geocoder.reverseGeocodeCoordinate(location.coordinate) { [weak self] (response, error) in
+                guard let self = self else { return }
+                
+                // ===== [디버깅을 위해 이 부분을 추가하세요] =====
+                if let error = error {
+                    // *** 여기가 핵심입니다 ***
+                    // Xcode 콘솔에 Google이 보낸 오류 메시지가 그대로 출력됩니다.
+                    print("--- GMSGeocoder 오류 발생 ---")
+                    print(error.localizedDescription)
+                    print("-----------------------------")
+                    
+                    self.finishRequest(with: nil)
+                    return
+                }
+                // ===========================================
+                
+                if let address = response?.firstResult() {
+                    let city = address.locality ?? address.administrativeArea
+                    self.cityName = city
+                    self.finishRequest(with: city)
+                } else {
+                    // [디버깅]
+                    print("GMSGeocoder가 주소는 반환했지만, firstResult가 nil입니다.")
+                    self.finishRequest(with: nil)
+                }
             }
         }
-    }
     
     /// 위치 정보 가져오기 실패
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
