@@ -389,6 +389,7 @@ struct PlaceInfoView: View {
     
     @State private var placeImage: Image?
     @State private var isLoadingImage = false
+    @StateObject private var firestoreManager = FavoritesManager()
     
     private var hasPhotos: Bool { place.photos != nil }
     
@@ -473,6 +474,21 @@ struct PlaceInfoView: View {
                         address: place.formattedAddress ?? "",
                         coordinate: place.coordinate
                     )
+                    // 2. [신규] Firebase 서버 저장/삭제 로직
+                    let spot = TravelSpot(
+                            placeID: placeID,
+                            name: place.name ?? "이름 없음",
+                            coordinate: place.coordinate,
+                            address: place.formattedAddress ?? ""
+                    )
+                
+                            if isFavorite {
+                                // 이미 찜 상태였다면 -> 취소(삭제)
+                                firestoreManager.removePlace(spot)
+                            } else {
+                                // 찜 안된 상태였다면 -> 추가(저장)
+                                firestoreManager.addPlace(spot)
+                            }
                 }) {
                     Image(systemName: isFavorite ? "heart.fill" : "heart")
                         .font(.title)
