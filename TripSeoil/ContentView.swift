@@ -6,7 +6,7 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        // NavigationStack을 사용하여 화면 전환을 관리합니다.
+        // NavigationStack을 사용하여 화면 전환을 관리
         NavigationStack {
             ZStack {
                 // 배경 이미지를 설정합니다.
@@ -23,7 +23,7 @@ struct ContentView: View {
 
                     Spacer()
 
-                    // "로그인" 버튼을 누르면    LoginView로 이동합니다.
+                    // "로그인" 버튼을 누르면 LoginView로 이동
                     NavigationLink(destination: LoginView()) {
                         Text("로그인")
                             .font(.system(size: 20, weight: .bold))
@@ -43,8 +43,3 @@ struct ContentView: View {
     }
 }
 
-// MARK: - 미리보기
-// Xcode의 Canvas에서 뷰를 미리 볼 수 있게 해줍니다.
-#Preview {
-    ContentView()
-}

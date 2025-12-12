@@ -11,6 +11,7 @@
 		5B1D351D2EB054EF00E48119 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 5B1D351C2EB054EF00E48119 /* FirebaseCore */; };
 		5B1D351F2EB0550800E48119 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 5B1D351E2EB0550800E48119 /* FirebaseFirestore */; };
 		5B1D35212EB0551800E48119 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 5B1D35202EB0551800E48119 /* FirebaseAuth */; };
+		5B6B7FB32EE7E94900FFBE85 /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 5B6B7FB22EE7E94900FFBE85 /* GoogleGenerativeAI */; };
 		5B8036832E79140000E215FD /* KakaoSDKFriendResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5B8036822E79140000E215FD /* KakaoSDKFriendResources.bundle */; };
 		5B8036862E7914D200E215FD /* RxKakaoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 5B8036852E7914D200E215FD /* RxKakaoSDK */; };
 		5B8036882E7914D200E215FD /* RxKakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 5B8036872E7914D200E215FD /* RxKakaoSDKAuth */; };
@@ -88,6 +89,7 @@
 				5BAA3ED12EB1029000CE048E /* GoogleMaps in Frameworks */,
 				5B8036862E7914D200E215FD /* RxKakaoSDK in Frameworks */,
 				5B80368A2E7914D200E215FD /* RxKakaoSDKCert in Frameworks */,
+				5B6B7FB32EE7E94900FFBE85 /* GoogleGenerativeAI in Frameworks */,
 				5B1D35172EB054DD00E48119 /* FirebaseCrashlytics in Frameworks */,
 				5B1D351D2EB054EF00E48119 /* FirebaseCore in Frameworks */,
 				5B8036882E7914D200E215FD /* RxKakaoSDKAuth in Frameworks */,
@@ -177,6 +179,7 @@
 				5BAA3ED02EB1029000CE048E /* GoogleMaps */,
 				5BAA3ED32EB1041600CE048E /* GooglePlaces */,
 				5BAA3ED52EB1041600CE048E /* GooglePlacesSwift */,
+				5B6B7FB22EE7E94900FFBE85 /* GoogleGenerativeAI */,
 			);
 			productName = TripSeoil;
 			productReference = 5B80363E2E7911B100E215FD /* TripSeoil.app */;
@@ -266,6 +269,7 @@
 				5B1D35122EB0538600E48119 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				5B1D35292EB1000C00E48119 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */,
 				5BAA3ED22EB1041600CE048E /* XCRemoteSwiftPackageReference "ios-places-sdk" */,
+				5B6B7FAF2EE7E7A200FFBE85 /* XCRemoteSwiftPackageReference "generative-ai-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5B80363F2E7911B100E215FD /* Products */;
@@ -655,6 +659,14 @@
 				minimumVersion = 10.4.0;
 			};
 		};
+		5B6B7FAF2EE7E7A200FFBE85 /* XCRemoteSwiftPackageReference "generative-ai-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/generative-ai-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.6;
+			};
+		};
 		5B8036692E79130600E215FD /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kakao/kakao-ios-sdk";
@@ -701,6 +713,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5B1D35122EB0538600E48119 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAuth;
+		};
+		5B6B7FB22EE7E94900FFBE85 /* GoogleGenerativeAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5B6B7FAF2EE7E7A200FFBE85 /* XCRemoteSwiftPackageReference "generative-ai-swift" */;
+			productName = GoogleGenerativeAI;
 		};
 		5B8036852E7914D200E215FD /* RxKakaoSDK */ = {
 			isa = XCSwiftPackageProductDependency;
