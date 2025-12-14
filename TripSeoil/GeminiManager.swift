@@ -5,7 +5,7 @@ import GoogleGenerativeAI
 @MainActor
 class GeminiManager: ObservableObject {
 
-    private let apiKey = "AIzaSyA4cz4Si603Qz5xNbcApl4GozJH9B79VnI"
+    private let apiKey = "YOUR_API_KEY"
     private var model: GenerativeModel?
     
     @Published var aiResponse: String = ""
@@ -22,15 +22,18 @@ class GeminiManager: ObservableObject {
             
             // 프롬프트: "엄격하게 장소 이름만 줘"라고 시킵니다.
             let prompt = """
-            Recommend 5 best "\(category)" tourist attractions in "\(city)".
-            Current weather is "\(weather)".
-            
-            [Constraints]
-            1. Exclude hotels, guesthouses, hospitals, and simple stores. Only real tourist spots.
-            2. Consider the weather (if rain/snow, recommend indoor places).
-            3. Output format: Just place names separated by commas. No numbering, no description.
-            Example: Place A, Place B, Place C
-            """
+                Recommend 10 popular "\(category)" tourist attractions in "\(city)".
+                Current weather condition is "\(weather)".
+
+                [Guidelines]
+                1. Quantity: Provide at least 10 places. (More options increase search success).
+                2. Weather: Consider the weather ("\(weather)"), but do NOT strictly exclude outdoor places if they are very famous landmarks.
+                3. Names: Use the most common English name used on Google Maps. Avoid long descriptive names.
+                4. Scope: It is okay to include famous shopping malls, large parks, or major landmarks.
+                5. OUTPUT FORMAT: Return ONLY a comma-separated list of names. No numbers, no descriptions.
+                
+                Example: Place A, Place B, Place C, Place D, Place E
+                """
             
             do {
                 let response = try await model.generateContent(prompt)

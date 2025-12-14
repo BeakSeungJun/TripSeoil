@@ -13,18 +13,7 @@ enum TourismCategory: String, CaseIterable, Identifiable {
     
     var id: String { self.rawValue }
     
-    var searchKeywords: [String] {
-        switch self {
-        case .natural:
-            return ["park", "national park", "botanical garden", "zoo", "aquarium", "mountain", "lake", "river", "beach"]
-        case .historical:
-            return ["museum", "history museum", "art museum", "historic site", "palace", "castle", "temple", "cathedral", "monument"]
-        case .experience:
-            return ["art gallery", "traditional market", "night market", "library", "workshop", "observatory", "planetarium"]
-        case .leisure:
-            return ["amusement park", "theme park", "shopping mall", "outlet", "movie theater", "stadium", "resort"]
-        }
-    }
+    // AI 전용이므로 키워드 리스트 삭제됨
     
     var shortName: String {
         switch self {
@@ -39,30 +28,30 @@ enum TourismCategory: String, CaseIterable, Identifiable {
 // MARK: - 2. 메인 지도 뷰
 struct RecommendedTripView: View {
     
+    // 뷰 모델 (다른 파일에 정의된 클래스 사용)
     @StateObject private var weatherViewModel = WeatherViewModel()
     @StateObject private var locationManager = LocationManager()
     @EnvironmentObject var favoriteStore: FavoriteStore
     
-    // AI 매니저 연결
+    // AI 매니저 (다른 파일에 정의됨)
     @StateObject private var geminiManager = GeminiManager()
     
+    // 상태 변수
     @State private var selectedPlace: GMSPlace?
     @State private var searchErrorMessage: String?
-    
     @State private var selectedCategory: TourismCategory = .historical
     @State private var cityNameQuery: String = "Seoul"
-    
     @State private var currentCityCoordinate: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 37.5665, longitude: 126.9780)
-    
     @State private var isFetchingLocation = false
     @State private var isSearching = false
     
     private let placesClient = GMSPlacesClient.shared()
     private let mapCommandPublisher = PassthroughSubject<MapCommand, Never>()
     
-    // MARK: - [AI] 추천 로직
+    // MARK: - [AI] 추천 로직 (AI Only)
     private func recommendPlaceByCategory() {
         let currentCity = weatherViewModel.searchText
+        // WeatherViewModel이 다른 파일에 있고, weatherData 구조가 동일하다고 가정
         let weatherMain = weatherViewModel.weatherData?.weather.first?.main ?? "Clear"
         
         // UI 리셋
@@ -74,33 +63,30 @@ struct RecommendedTripView: View {
         Task {
             print("🤖 AI에게 장소 추천 요청 중: \(currentCity)")
             
+            // AI에게 추천 요청
             let recommendations = await geminiManager.recommendAttractions(
                 city: currentCity,
                 category: selectedCategory.shortName,
                 weather: weatherMain
             )
             
+            // [수정] AI 결과가 있을 때만 검색 진행 (Fallback 없음)
             if let bestPick = recommendations.randomElement() {
                 print("✅ AI 추천 성공: \(bestPick)")
                 performSearch(query: "\(bestPick) in \(currentCity)")
             } else {
-                print("⚠️ AI 응답 없음 -> 기존 방식(Fallback)")
-                fallbackSearch(city: currentCity, weather: weatherMain)
+                print("⚠️ AI 응답 없음")
+                DispatchQueue.main.async {
+                    self.searchErrorMessage = "AI가 적절한 장소를 찾지 못했습니다. 다시 시도해 주세요."
+                    self.isSearching = false
+                }
             }
         }
-    }
-    
-    private func fallbackSearch(city: String, weather: String) {
-        let isBadWeather = ["Rain", "Snow"].contains(weather)
-        let keyword = selectedCategory.searchKeywords.randomElement() ?? "landmark"
-        let query = isBadWeather ? "Famous Indoor \(keyword) in \(city)" : "Famous \(keyword) in \(city)"
-        performSearch(query: query)
     }
 
     // MARK: - Google Places API 검색
     private func performSearch(query: String) {
         DispatchQueue.main.async {
-            // 좌표 계산
             let centerLat = self.currentCityCoordinate.latitude
             let centerLng = self.currentCityCoordinate.longitude
             let offset: Double = 0.5
@@ -125,7 +111,6 @@ struct RecommendedTripView: View {
                     return
                 }
                 
-                // [중요] photos, userRatingsTotal 필드 포함
                 let fields: GMSPlaceField = [.name, .coordinate, .formattedAddress, .rating, .photos, .types, .placeID, .userRatingsTotal]
                 
                 self.placesClient.fetchPlace(fromPlaceID: firstResult.placeID, placeFields: fields, sessionToken: nil) { (place, error) in
@@ -178,6 +163,7 @@ struct RecommendedTripView: View {
             ).edgesIgnoringSafeArea(.all)
             
             VStack(spacing: 0) {
+                // 상단 검색바 및 카테고리
                 SearchAndCategoryHeaderView(
                     cityNameQuery: $cityNameQuery,
                     selectedCategory: $selectedCategory,
@@ -185,7 +171,9 @@ struct RecommendedTripView: View {
                     onGetLocation: recommendByCurrentLocation,
                     isFetchingLocation: isFetchingLocation
                 )
+                .padding(.top, 10)
                 
+                // AI 추천 버튼
                 Button(action: recommendPlaceByCategory) {
                     HStack {
                         if isSearching {
@@ -208,6 +196,7 @@ struct RecommendedTripView: View {
                 }
                 .disabled(weatherViewModel.isLoading || isSearching)
                 
+                // 간단 날씨 텍스트
                 if let weather = weatherViewModel.weatherData?.weather.first {
                     Text("현재 \(weatherViewModel.searchText) 날씨: \(weather.description)")
                         .font(.caption).foregroundColor(.black.opacity(0.8)).padding(.horizontal).padding(.bottom, 5)
@@ -219,8 +208,16 @@ struct RecommendedTripView: View {
                 Spacer()
             }
             
+            // 우측 하단 컨트롤 버튼 및 정보창
             VStack(spacing: 0) {
-                MapControlButtons(commandPublisher: mapCommandPublisher).padding(.horizontal, 16).padding(.bottom, 8)
+                HStack {
+                    Spacer()
+                    // [수정] 겹침 방지 및 디자인 통일된 버튼 (우측 하단)
+                    MapControlButtons(commandPublisher: mapCommandPublisher)
+                        .padding(.trailing, 16)
+                        .padding(.bottom, selectedPlace != nil ? 10 : 30) // 정보창 유무에 따라 위치 조정
+                }
+                
                 if let place = selectedPlace {
                     PlaceInfoView(place: place, placesClient: placesClient)
                         .frame(height: 450)
@@ -270,27 +267,54 @@ struct SearchAndCategoryHeaderView: View {
     }
 }
 
+// [수정] 버튼 겹침 및 크기 문제 해결을 위한 개선된 컨트롤 버튼
 struct MapControlButtons: View {
     let commandPublisher: PassthroughSubject<MapCommand, Never>
+    
     var body: some View {
-        HStack(spacing: 12) {
-            Spacer()
-            Button(action: { commandPublisher.send(.zoomIn) }) {
-                Image(systemName: "plus").font(.headline).padding(10).background(Color.white.opacity(0.9)).foregroundColor(.black).clipShape(Circle()).shadow(radius: 3)
+        VStack(spacing: 12) {
+            // 내 위치로 이동 버튼
+            MapButton(iconName: "location.fill") {
+                commandPublisher.send(.moveToCurrentLocation)
             }
-            Button(action: { commandPublisher.send(.zoomOut) }) {
-                Image(systemName: "minus").font(.headline).padding(10).background(Color.white.opacity(0.9)).foregroundColor(.black).clipShape(Circle()).shadow(radius: 3)
+            
+            // 줌 인
+            MapButton(iconName: "plus") {
+                commandPublisher.send(.zoomIn)
+            }
+            
+            // 줌 아웃
+            MapButton(iconName: "minus") {
+                commandPublisher.send(.zoomOut)
             }
         }
     }
 }
 
-// [수정 완료] PlaceInfoView
+// [신규] 버튼 디자인 통일용 컴포넌트
+struct MapButton: View {
+    let iconName: String
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: iconName)
+                .font(.system(size: 20, weight: .semibold))
+                .foregroundColor(.black)
+                .frame(width: 44, height: 44) // 크기 고정으로 정렬 문제 해결
+                .background(Color.white.opacity(0.95))
+                .clipShape(Circle())
+                .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
+        }
+    }
+}
+
 struct PlaceInfoView: View {
     let place: GMSPlace
     let placesClient: GMSPlacesClient
     
     @EnvironmentObject var favoriteStore: FavoriteStore
+    // FavoritesManager가 별도 파일에 정의되어 있다고 가정
     let firestoreManager = FavoritesManager()
     
     @State private var placeImage: Image?
@@ -314,7 +338,6 @@ struct PlaceInfoView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // 헤더 (이름, 주소, 즐겨찾기)
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(place.name ?? "이름 없음").font(.title2).fontWeight(.bold).lineLimit(1)
@@ -327,7 +350,6 @@ struct PlaceInfoView: View {
                 Button(action: {
                     favoriteStore.toggleFavorite(id: placeID, name: place.name ?? "", address: place.formattedAddress ?? "", coordinate: place.coordinate)
                     let spot = TravelSpot(placeID: placeID, name: place.name ?? "", coordinate: place.coordinate, address: place.formattedAddress ?? "")
-                    
                     if isFavorite { firestoreManager.removePlace(spot) } else { firestoreManager.addPlace(spot) }
                 }) {
                     Image(systemName: isFavorite ? "heart.fill" : "heart")
@@ -340,10 +362,8 @@ struct PlaceInfoView: View {
             
             Divider()
             
-            // 메인 내용
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
-                    // 이미지 자동 로드 및 크기 키움
                     if let image = placeImage {
                         image.resizable().aspectRatio(contentMode: .fill)
                             .frame(height: 250)
@@ -359,7 +379,6 @@ struct PlaceInfoView: View {
                         }
                     }
                     
-                    // 별점 & 리뷰수
                     HStack(spacing: 12) {
                         if let rating = ratingString {
                             HStack(spacing: 4) { Image(systemName: "star.fill").foregroundColor(.yellow); Text(rating).fontWeight(.medium) }.font(.subheadline)
@@ -369,7 +388,6 @@ struct PlaceInfoView: View {
                         }
                     }
                     
-                    // 카테고리 태그
                     if let categoryString = categoryTagString {
                         Text(categoryString)
                             .font(.caption).fontWeight(.medium)
@@ -381,7 +399,6 @@ struct PlaceInfoView: View {
             }
         }
         .background(Color.white).cornerRadius(20, corners: [.topLeft, .topRight]).shadow(radius: 10)
-        // 뷰 나타날 때 이미지 자동 로드
         .onAppear {
             placeImage = nil
             loadImage()
@@ -391,7 +408,6 @@ struct PlaceInfoView: View {
     private func loadImage() {
         guard let photoMetadata = place.photos?.first else { return }
         isLoadingImage = true
-        // [수정 완료] scale 파라미터 추가하여 오류 해결
         placesClient.loadPlacePhoto(photoMetadata, constrainedTo: CGSize(width: 600, height: 400), scale: 1.0) { (photo, error) in
             DispatchQueue.main.async {
                 if let photo = photo { self.placeImage = Image(uiImage: photo) }
@@ -401,17 +417,30 @@ struct PlaceInfoView: View {
     }
 }
 
-// MARK: - 4. Google Map 래퍼
-enum MapCommand { case clearMarkers, addMarker(place: GMSPlace, camera: CameraUpdate), moveCamera(to: CLLocationCoordinate2D), zoomIn, zoomOut }
+// MARK: - 4. Google Map 래퍼 및 유틸리티
+enum MapCommand {
+    case clearMarkers
+    case addMarker(place: GMSPlace, camera: CameraUpdate)
+    case moveCamera(to: CLLocationCoordinate2D)
+    case zoomIn
+    case zoomOut
+    case moveToCurrentLocation // 내 위치로 이동 명령
+}
 enum CameraUpdate { case move, none }
 
 struct GoogleMapView: UIViewRepresentable {
     let initialCamera: GMSCameraPosition
     let commandPublisher: AnyPublisher<MapCommand, Never>
-    @State private var mapView = GMSMapView()
     
     func makeUIView(context: Context) -> GMSMapView {
-        mapView.camera = initialCamera; mapView.isMyLocationEnabled = true; mapView.settings.myLocationButton = true; mapView.delegate = context.coordinator; context.coordinator.setMapView(mapView); return mapView
+        let mapView = GMSMapView()
+        mapView.camera = initialCamera
+        mapView.isMyLocationEnabled = true
+        // [중요] 기본 버튼 비활성화 (커스텀 버튼과 겹침 방지)
+        mapView.settings.myLocationButton = false
+        mapView.delegate = context.coordinator
+        context.coordinator.setMapView(mapView)
+        return mapView
     }
     func updateUIView(_ uiView: GMSMapView, context: Context) {}
     func makeCoordinator() -> Coordinator { Coordinator(commandPublisher: commandPublisher) }
@@ -433,6 +462,10 @@ struct GoogleMapView: UIViewRepresentable {
                 case .moveCamera(let coordinate): mapView.animate(to: GMSCameraPosition.camera(withTarget: coordinate, zoom: 12))
                 case .zoomIn: mapView.animate(toZoom: mapView.camera.zoom + 1)
                 case .zoomOut: mapView.animate(toZoom: mapView.camera.zoom - 1)
+                case .moveToCurrentLocation: // 내 위치로 이동 로직
+                    if let location = mapView.myLocation {
+                        mapView.animate(to: GMSCameraPosition.camera(withTarget: location.coordinate, zoom: 15))
+                    }
                 }
             }.store(in: &cancellables)
         }

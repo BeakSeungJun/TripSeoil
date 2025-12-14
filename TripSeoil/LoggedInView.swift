@@ -62,8 +62,7 @@ struct LoggedInView: View {
                     .tag(3)
                 
                 // MARK: - 여행 기록 탭
-                // MyTravelLogView()
-                MyStorageView()
+                MystorageView()
                     .tabItem {
                         Image(systemName: "pencil.circle.fill")
                         Text("즐겨찾기")
