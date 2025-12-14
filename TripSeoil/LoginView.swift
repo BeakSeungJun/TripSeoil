@@ -108,6 +108,11 @@ class LoginViewModel: ObservableObject {
         case .success(let authResults):
             print("Apple 로그인 성공!")
             if let appleIDCredential = authResults.credential as? ASAuthorizationAppleIDCredential {
+                
+                let appleUserID = appleIDCredential.user // 이게 고유 ID입니다.
+                UserDefaults.standard.set(appleUserID, forKey: "user_uid")
+                print("📌 저장된 애플 ID: \(appleUserID)")
+                
                 let fullName = appleIDCredential.fullName
                 let givenName = fullName?.givenName ?? ""
                 let familyName = fullName?.familyName ?? ""
@@ -137,6 +142,12 @@ class LoginViewModel: ObservableObject {
                 self?.handleLoginFailure(error: error)
             } else if let user = user {
                 let nickname = user.kakaoAccount?.profile?.nickname
+                
+                if let kakaoID = user.id {
+                                    UserDefaults.standard.set(String(kakaoID), forKey: "user_uid")
+                                    print("📌 저장된 카카오 ID: \(kakaoID)")
+                                }
+                
                 self?.handleLoginSuccess(username: nickname ?? "사용자")
             }
         }
